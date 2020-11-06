@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, Text, View, TextInput} from 'react-native';
-import Gap from '../Gap';
+import {colors, fonts} from '../../../utils';
 
 const Input = ({text}) => {
   return (
@@ -15,9 +15,15 @@ export default Input;
 
 const styles = StyleSheet.create({
   desc: {
-    color: '#7D8797',
-    fontFamily: 'Nunito-Light',
+    fontSize: 16,
+    color: colors.text.secondary,
+    fontFamily: fonts.primary.normal,
     marginBottom: 6,
   },
-  input: {borderWidth: 1, borderColor: '#E9E9E9', borderRadius: 10},
+  input: {
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: 10,
+    padding: 12,
+  },
 });

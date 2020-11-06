@@ -3,6 +3,7 @@ import {Image, ImageBackground, StyleSheet, Text, View} from 'react-native';
 import {GetStarted} from '..';
 import {ILlogo, ILGetStarted} from '../../assets';
 import {Button, Gap} from '../../components';
+import {colors, fonts} from '../../utils';
 
 const index = ({navigation}) => {
   return (
@@ -30,12 +31,16 @@ const index = ({navigation}) => {
 export default index;
 
 const styles = StyleSheet.create({
-  pages: {padding: 40, flex: 1, justifyContent: 'space-between'},
+  pages: {
+    padding: 40,
+    flex: 1,
+    justifyContent: 'space-between',
+  },
   title: {
     marginTop: 91,
     fontSize: 28,
     lineHeight: 34,
-    color: 'white',
-    fontFamily: 'Nunito-SemiBold',
+    color: colors.white,
+    fontFamily: fonts.primary[600],
   },
 });

@@ -1,9 +1,10 @@
 import React from 'react';
-import {StyleSheet, Text, View, ScroollView} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import {ILlogo} from '../../assets/illustration';
 import {Button, Gap, Input, Link} from '../../components';
+import {colors, fonts} from '../../utils';
 
-const SignIn = () => {
+const SignIn = ({navigation}) => {
   return (
     <View style={styles.container}>
       <ILlogo />
@@ -14,7 +15,7 @@ const SignIn = () => {
       <Input text="Password" />
       <Link txt="Forgot My Password" size={12} />
       <Gap height={40} />
-      <Button title="Sign In" />
+      <Button title="Sign In" onPress={() => navigation.replace('MainApp')} />
       <Link txt="Create New Account" size={16} align="center" />
     </View>
   );
@@ -25,14 +26,14 @@ export default SignIn;
 const styles = StyleSheet.create({
   container: {
     padding: 40,
-    backgroundColor: 'white',
+    backgroundColor: colors.white,
     flex: 1,
   },
   title: {
-    fontFamily: 'Nunito-SemiBold',
+    fontFamily: fonts.primary[600],
     fontSize: 20,
     lineHeight: 24,
-    color: '#112340',
+    color: colors.text.primary,
     maxWidth: 153,
     marginTop: 40,
   },

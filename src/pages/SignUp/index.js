@@ -1,13 +1,13 @@
 import React from 'react';
-import {StyleSheet, Text, View, ScroolView} from 'react-native';
-import {Button, Gap, Input} from '../../components';
+import {StyleSheet, View} from 'react-native';
+import {Button, Gap, Header, Input} from '../../components';
+import {colors} from '../../utils';
 
-const SignUp = () => {
+const SignUp = ({navigation}) => {
   return (
-    <View style={{backgroundColor: 'white'}}>
-      <Text style={styles.title}>Daftar Akun</Text>
+    <View style={styles.page}>
+      <Header title="Daftar Akun" onPress={() => navigation.goBack()} />
       <View style={styles.container}>
-        <Gap height={40} />
         <Input text="Full Name" />
         <Gap height={24} />
         <Input text="Pekerjaan" />
@@ -16,7 +16,10 @@ const SignUp = () => {
         <Gap height={24} />
         <Input text="Password" />
         <Gap height={40} />
-        <Button title="Continue" />
+        <Button
+          title="Continue"
+          onPress={() => navigation.navigate('UploadPhoto')}
+        />
       </View>
     </View>
   );
@@ -25,15 +28,11 @@ const SignUp = () => {
 export default SignUp;
 
 const styles = StyleSheet.create({
-  title: {
-    fontFamily: 'Nanito-SemiBold',
-    fontSize: 20,
-    lineHeight: 27,
-    color: '#112340',
-    textAlign: 'center',
-    marginTop: 30,
-  },
   container: {
     padding: 40,
+    paddingTop: 10,
+  },
+  page: {
+    backgroundColor: colors.white,
   },
 });
