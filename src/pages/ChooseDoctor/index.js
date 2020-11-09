@@ -7,38 +7,44 @@ import {
   DummyDoctor8,
   DummyDoctor9,
 } from '../../assets';
-import {Header, ListDoctor} from '../../components';
+import {Header, List} from '../../components';
 import {colors} from '../../utils';
 
-const ChooseDoctor = () => {
+const ChooseDoctor = ({navigation}) => {
   return (
     <View style={styles.page}>
-      <Header title="Pilih Dokter Anak" type="dark" icon="back-light" />
-      <ListDoctor
+      <Header
+        title="Pilih Dokter Anak"
+        type="dark"
+        icon="back-light"
+        onPress={() => navigation.goBack()}
+      />
+      <List
         type="next"
         profile={DummyDoctor8}
         name="Alexander Got"
         desc="Wanita"
+        onPress={() => navigation.navigate('Chatting')}
       />
-      <ListDoctor
+      <List
         type="next"
         profile={DummyDoctor9}
         name="Alexander Got"
         desc="Wanita"
       />
-      <ListDoctor
+      <List
         type="next"
         profile={DummyDoctor10}
         name="Alexander Got"
         desc="Wanita"
       />
-      <ListDoctor
+      <List
         type="next"
         profile={DummyDoctor11}
         name="Alexander Got"
         desc="Wanita"
       />
-      <ListDoctor
+      <List
         type="next"
         profile={DummyDoctor7}
         name="Alexander Got"

@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {DummyDoctor4, DummyDoctor5, DummyDoctor6} from '../../assets';
-import {ListDoctor} from '../../components';
+import {List} from '../../components';
 import {colors} from '../../utils/colors';
 import {fonts} from '../../utils/fonts';
 
@@ -32,7 +32,7 @@ const Message = () => {
         <Text style={styles.title}>Message</Text>
         {doctors.map((doctor) => {
           return (
-            <ListDoctor
+            <List
               key={doctor.id}
               profile={doctor.profile}
               name={doctor.name}
