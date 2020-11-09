@@ -1,17 +1,19 @@
 import React from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
+import {IconNext} from '../../../assets';
 import {DummyDoctor2} from '../../../assets/dummy';
 import {colors} from '../../../utils/colors';
 import {fonts} from '../../../utils/fonts';
 
-const ListDoctor = ({profile, name, desc}) => {
+const ListDoctor = ({profile, name, desc, type}) => {
   return (
     <View style={styles.container}>
       <Image source={profile} style={styles.avatar} />
-      <View>
+      <View style={styles.content}>
         <Text style={styles.name}>{name}</Text>
         <Text style={styles.desc}>{desc}</Text>
       </View>
+      {type === 'next' && <IconNext />}
     </View>
   );
 };
@@ -25,7 +27,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
     alignItems: 'center',
+    justifyContent: 'space-between',
   },
+  content: {flex: 1},
   avatar: {height: 46, width: 46, borderRadius: 46 / 2, marginRight: 12},
   name: {
     fontFamily: fonts.primary.normal,

@@ -1,7 +1,7 @@
 import React from 'react';
 import {Image, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import {Button, Gap, Header, Link} from '../../components';
-import {ILNullPhoto, ICAddPhoto} from '../../assets';
+import {ILNullPhoto, IconAddPhoto} from '../../assets';
 import {colors, fonts} from '../../utils';
 
 const UploadPhoto = () => {
@@ -12,7 +12,7 @@ const UploadPhoto = () => {
         <View style={styles.profile}>
           <TouchableOpacity style={styles.avatarWrapper}>
             <Image source={ILNullPhoto} style={styles.avatar} />
-            <ICAddPhoto style={styles.addPhoto} />
+            <IconAddPhoto style={styles.addPhoto} />
           </TouchableOpacity>
           <Text style={styles.name}>Shayna Melinda</Text>
           <Text style={styles.profession}>Product Designer</Text>
