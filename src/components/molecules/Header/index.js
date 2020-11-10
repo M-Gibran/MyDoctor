@@ -6,7 +6,7 @@ import DarkPofile from './DarkPofile';
 
 const Header = ({title, onPress, type}) => {
   if (type === 'dark-profile') {
-    return <DarkPofile />;
+    return <DarkPofile onPress={onPress} />;
   }
   return (
     <View style={styles.container(type)}>

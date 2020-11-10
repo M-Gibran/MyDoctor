@@ -9,7 +9,12 @@ import {
   RatedDoctor,
 } from '../../components';
 import {colors, fonts} from '../../utils';
-import {JSONDoctorCategory} from '../../assets';
+import {
+  DummyDoctor1,
+  DummyDoctor2,
+  DummyDoctor3,
+  JSONDoctorCategory,
+} from '../../assets';
 
 const Doctor = ({navigation}) => {
   return (
@@ -42,9 +47,24 @@ const Doctor = ({navigation}) => {
           </View>
           <View style={styles.wrapperSection}>
             <Text style={styles.sectionLabel}>Top Rated Doctor</Text>
-            <RatedDoctor />
-            <RatedDoctor />
-            <RatedDoctor />
+            <RatedDoctor
+              name="Alexa Rachel"
+              desc="Pediatrician"
+              avatar={DummyDoctor1}
+              onPress={() => navigation.navigate('DoctorProfile')}
+            />
+            <RatedDoctor
+              name="Sunny Frank"
+              desc="Dentist"
+              avatar={DummyDoctor2}
+              onPress={() => navigation.navigate('DoctorProfile')}
+            />
+            <RatedDoctor
+              name="Poe Sang min"
+              desc="Podiatrist"
+              avatar={DummyDoctor3}
+              onPress={() => navigation.navigate('DoctorProfile')}
+            />
             <Text style={styles.sectionLabel}>Good News</Text>
           </View>
           <NewsItem />

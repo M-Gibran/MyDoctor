@@ -5,7 +5,7 @@ import {List} from '../../components';
 import {colors} from '../../utils/colors';
 import {fonts} from '../../utils/fonts';
 
-const Message = () => {
+const Message = ({navigation}) => {
   const [doctors, SetDoctors] = useState([
     {
       id: 1,
@@ -37,6 +37,7 @@ const Message = () => {
               profile={doctor.profile}
               name={doctor.name}
               desc={doctor.desc}
+              onPress={() => navigation.navigate('Chatting')}
             />
           );
         })}

@@ -1,5 +1,5 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import {ILlogo} from '../../assets/illustration';
 import {Button, Gap, Input, Link} from '../../components';
 import {colors, fonts} from '../../utils';
@@ -7,16 +7,23 @@ import {colors, fonts} from '../../utils';
 const SignIn = ({navigation}) => {
   return (
     <View style={styles.container}>
-      <ILlogo />
-      <Text style={styles.title}>Masuk dan mulai berkontribusi</Text>
-      <Gap height={40} />
-      <Input text="Email Address" />
-      <Gap height={24} />
-      <Input text="Password" />
-      <Link txt="Forgot My Password" size={12} />
-      <Gap height={40} />
-      <Button title="Sign In" onPress={() => navigation.replace('MainApp')} />
-      <Link txt="Create New Account" size={16} align="center" />
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <ILlogo />
+        <Text style={styles.title}>Masuk dan mulai berkontribusi</Text>
+        <Gap height={40} />
+        <Input text="Email Address" />
+        <Gap height={24} />
+        <Input text="Password" />
+        <Link txt="Forgot My Password" size={12} />
+        <Gap height={40} />
+        <Button title="Sign In" onPress={() => navigation.replace('MainApp')} />
+        <Link
+          txt="Create New Account"
+          size={16}
+          align="center"
+          onPress={() => navigation.navigate('SignUp')}
+        />
+      </ScrollView>
     </View>
   );
 };
