@@ -1,24 +1,47 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Image, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import {Button, Gap, Header, Link} from '../../components';
-import {ILNullPhoto, IconAddPhoto} from '../../assets';
+import {ILNullPhoto, IconAddPhoto, IconRemovePhoto} from '../../assets';
 import {colors, fonts} from '../../utils';
+import ImagePicker from 'react-native-image-picker';
+import {showMessage} from 'react-native-flash-message';
 
 const UploadPhoto = ({navigation}) => {
+  const [hasPhoto, setHasPhoto] = useState(false);
+  const [photo, setPhoto] = useState(ILNullPhoto);
+  const getImage = () => {
+    ImagePicker.launchImageLibrary({}, (response) => {
+      console.log('response', response);
+      if (response.didCancel || response.error) {
+        showMessage({
+          message: 'oops, sepertinya anda tidak memilih foto nya?',
+          type: 'default',
+          backgroundColor: colors.error,
+          color: colors.white,
+        });
+      } else {
+        const source = {uri: response.uri};
+        setPhoto(source);
+        setHasPhoto(true);
+      }
+    });
+  };
   return (
     <View style={styles.page}>
       <Header title="Upload Photo" />
       <View style={styles.content}>
         <View style={styles.profile}>
-          <TouchableOpacity style={styles.avatarWrapper}>
-            <Image source={ILNullPhoto} style={styles.avatar} />
-            <IconAddPhoto style={styles.addPhoto} />
+          <TouchableOpacity style={styles.avatarWrapper} onPress={getImage}>
+            <Image source={photo} style={styles.avatar} />
+            {hasPhoto && <IconRemovePhoto style={styles.addPhoto} />}
+            {!hasPhoto && <IconAddPhoto style={styles.addPhoto} />}
           </TouchableOpacity>
           <Text style={styles.name}>Shayna Melinda</Text>
           <Text style={styles.profession}>Product Designer</Text>
         </View>
         <View>
           <Button
+            disable={!hasPhoto}
             title="Upload and Continue"
             onPress={() => navigation.replace('MainApp')}
           />
