@@ -1,12 +1,26 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, Text, View, TextInput} from 'react-native';
 import {colors, fonts} from '../../../utils';
 
-const Input = ({text}) => {
+const Input = ({text, value, onChangeText, secureTextEntry}) => {
+  const [border, SetBorder] = useState(colors.border);
+  const onFocusFrom = () => {
+    SetBorder(colors.tertiary);
+  };
+  const onBlurForm = () => {
+    SetBorder(colors.border);
+  };
   return (
     <View>
       <Text style={styles.desc}>{text}</Text>
-      <TextInput style={styles.input} />
+      <TextInput
+        onFocus={onFocusFrom}
+        onBlur={onBlurForm}
+        style={styles.input(border)}
+        value={value}
+        onChangeText={onChangeText}
+        secureTextEntry={secureTextEntry}
+      />
     </View>
   );
 };
@@ -20,10 +34,10 @@ const styles = StyleSheet.create({
     fontFamily: fonts.primary.normal,
     marginBottom: 6,
   },
-  input: {
+  input: (border) => ({
     borderWidth: 1,
-    borderColor: colors.border,
+    borderColor: border,
     borderRadius: 10,
     padding: 12,
-  },
+  }),
 });
