@@ -2,31 +2,52 @@ import React, {useState} from 'react';
 import {Image, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import {Button, Gap, Header, Link} from '../../components';
 import {ILNullPhoto, IconAddPhoto, IconRemovePhoto} from '../../assets';
-import {colors, fonts} from '../../utils';
+import {colors, fonts, storeData} from '../../utils';
 import ImagePicker from 'react-native-image-picker';
 import {showMessage} from 'react-native-flash-message';
+import {Firebase} from '../../config';
 
 const UploadPhoto = ({navigation, route}) => {
+  const {fullName, profession, uid} = route.params;
+
   const [hasPhoto, setHasPhoto] = useState(false);
   const [photo, setPhoto] = useState(ILNullPhoto);
-  const {fullName, email, profession} = route.params;
+  const [photoforDB, setPhotoforDB] = useState('');
+
   const getImage = () => {
-    ImagePicker.launchImageLibrary({}, (response) => {
-      console.log('response', response);
-      if (response.didCancel || response.error) {
-        showMessage({
-          message: 'oops, sepertinya anda tidak memilih foto nya?',
-          type: 'default',
-          backgroundColor: colors.error,
-          color: colors.white,
-        });
-      } else {
-        const source = {uri: response.uri};
-        setPhoto(source);
-        setHasPhoto(true);
-      }
-    });
+    ImagePicker.launchImageLibrary(
+      {quality: 0.5, maxWidth: 200, maxHeight: 200},
+      (response) => {
+        console.log('response', response);
+        if (response.didCancel || response.error) {
+          showMessage({
+            message: 'oops, sepertinya anda tidak memilih foto nya?',
+            type: 'default',
+            backgroundColor: colors.error,
+            color: colors.white,
+          });
+        } else {
+          const source = {uri: response.uri};
+
+          setPhotoforDB(`data:${response.type};base64, ${response.data}`);
+          setPhoto(source);
+          setHasPhoto(true);
+        }
+      },
+    );
   };
+
+  const uploadAndContinue = () => {
+    Firebase.database()
+      .ref('users/' + uid + '/')
+      .update({photo: photoforDB});
+    navigation.replace('MainApp');
+
+    const data = route.params;
+    data.photo = photoforDB;
+    storeData('user', data);
+  };
+
   return (
     <View style={styles.page}>
       <Header title="Upload Photo" />
@@ -44,7 +65,7 @@ const UploadPhoto = ({navigation, route}) => {
           <Button
             disable={!hasPhoto}
             title="Upload and Continue"
-            onPress={() => navigation.replace('MainApp')}
+            onPress={uploadAndContinue}
           />
           <Gap height={30} />
           <Link
