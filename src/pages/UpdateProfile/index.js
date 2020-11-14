@@ -4,7 +4,8 @@ import {showMessage} from 'react-native-flash-message';
 import {ILNullPhoto} from '../../assets';
 import {Button, Gap, Header, Input, Profile} from '../../components';
 import {Firebase} from '../../config';
-import {colors, getData} from '../../utils';
+import {colors, getData, storeData} from '../../utils';
+import ImagePicker from 'react-native-image-picker';
 
 const UpdateProfile = ({navigation}) => {
   const [profile, SetProfile] = useState({
@@ -15,12 +16,14 @@ const UpdateProfile = ({navigation}) => {
   });
 
   const [password, SetPassword] = useState('');
+  const [photo, setPhoto] = useState(ILNullPhoto);
+  const [photoForDB, setPhotoForDB] = useState('');
 
   useEffect(() => {
     getData('user')
       .then((res) => {
         const data = res;
-        data.photo = {uri: res.photo};
+        setPhoto({uri: res.photo});
         SetProfile(data);
       })
       .catch((err) => {
@@ -30,18 +33,13 @@ const UpdateProfile = ({navigation}) => {
 
   const update = () => {
     const data = profile;
-    data.photo = profile.photo.uri;
+    data.photo = photoForDB;
     Firebase.database()
       .ref(`users/${profile.uid}/`)
-      .update(profile)
+      .update(data)
       .then(() => {
-        showMessage({
-          message: 'Update Berhasil',
-          color: colors.white,
-          backgroundColor: colors.primary,
-          type: 'default',
-        });
-        navigation.goBack('UserProfile');
+        console.log('SUKSES:', data);
+        storeData('user', data);
       })
       .catch((err) => {
         showMessage({
@@ -59,12 +57,33 @@ const UpdateProfile = ({navigation}) => {
     });
   };
 
+  const getImage = () => {
+    ImagePicker.launchImageLibrary(
+      {quality: 0.5, maxWidth: 200, maxHeight: 200},
+      (response) => {
+        console.log('response', response);
+        if (response.didCancel || response.error) {
+          showMessage({
+            message: 'oops, sepertinya anda tidak memilih foto nya?',
+            type: 'default',
+            backgroundColor: colors.error,
+            color: colors.white,
+          });
+        } else {
+          const source = {uri: response.uri};
+
+          setPhotoForDB(`data:${response.type};base64, ${response.data}`);
+          setPhoto(source);
+        }
+      },
+    );
+  };
   return (
     <View style={styles.page}>
       <Header title="Edit Profile" onPress={() => navigation.goBack()} />
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.content}>
-          <Profile isRemove photo={profile.photo} />
+          <Profile isRemove photo={photo} onPress={getImage} />
           <Gap height={26} />
           <Input
             text="Full Name"
