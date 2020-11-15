@@ -32,6 +32,41 @@ const UpdateProfile = ({navigation}) => {
   }, []);
 
   const update = () => {
+    if (password.length > 0) {
+      if (password.length < 6) {
+        showMessage({
+          message: 'Password anda kurang dari 6 karakter',
+          color: colors.white,
+          backgroundColor: colors.error,
+          type: 'default',
+        });
+      } else {
+        updatePassword();
+        updateProfileData();
+        navigation.replace('MainApp');
+      }
+    } else {
+      updateProfileData();
+      navigation.replace('MainApp');
+    }
+  };
+
+  const updatePassword = () => {
+    Firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        user.updatePassword(password).catch((err) => {
+          showMessage({
+            message: err.message,
+            color: colors.white,
+            backgroundColor: colors.error,
+            type: 'default',
+          });
+        });
+      }
+    });
+  };
+
+  const updateProfileData = () => {
     const data = profile;
     data.photo = photoForDB;
     Firebase.database()
@@ -50,6 +85,7 @@ const UpdateProfile = ({navigation}) => {
         });
       });
   };
+
   const changetext = (key, value) => {
     SetProfile({
       ...profile,
@@ -99,7 +135,12 @@ const UpdateProfile = ({navigation}) => {
           <Gap height={24} />
           <Input text="Email" value={profile.email} disable />
           <Gap height={24} />
-          <Input text="Password" />
+          <Input
+            text="Password"
+            secureTextEntry
+            value={password}
+            onChangeText={(value) => SetPassword(value)}
+          />
           <Gap height={40} />
           <Button title="Save Profile" onPress={update} />
         </View>
