@@ -7,13 +7,14 @@ import {colors, fonts} from '../../utils';
 const Splash = ({navigation}) => {
   useEffect(() => {
     setTimeout(() => {
-      Firebase.auth().onAuthStateChanged((user) => {
-        if (user) {
-          navigation.replace('MainApp');
-        } else {
-          navigation.replace('GetStarted');
-        }
-      });
+      // Firebase.auth().onAuthStateChanged((user) => {
+      //   if (user) {
+      //     navigation.replace('MainApp');
+      //   } else {
+      //     navigation.replace('GetStarted');
+      //   }
+      // });
+      navigation.replace('GetStarted');
     }, 3000);
   }, [navigation]);
   return (
