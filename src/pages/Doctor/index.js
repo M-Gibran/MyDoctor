@@ -21,7 +21,11 @@ const Doctor = ({navigation}) => {
     getCategoryDoctor();
     getTopRatedDoctors();
     getNews();
-  });
+  }, []);
+
+  const parseArray = (listObject) => {
+    return data;
+  };
 
   const getTopRatedDoctors = () => {
     Firebase.database()
@@ -31,7 +35,15 @@ const Doctor = ({navigation}) => {
       .once('value')
       .then((res) => {
         if (res.val()) {
-          SetNews(res.val());
+          const oldData = res.val();
+          const data = [];
+          Object.keys(oldData).map((key) => {
+            data.push({
+              id: key,
+              data: oldData[key],
+            });
+          });
+          SetTopRatedDoctor(data);
         }
       })
       .catch((err) => {
@@ -97,36 +109,32 @@ const Doctor = ({navigation}) => {
           </View>
           <View style={styles.wrapperSection}>
             <Text style={styles.sectionLabel}>Top Rated Doctor</Text>
-            <RatedDoctor
-              name="Alexa Rachel"
-              desc="Pediatrician"
-              avatar={DummyDoctor1}
-              onPress={() => navigation.navigate('DoctorProfile')}
-            />
-            <RatedDoctor
-              name="Sunny Frank"
-              desc="Dentist"
-              avatar={DummyDoctor2}
-              onPress={() => navigation.navigate('DoctorProfile')}
-            />
-            <RatedDoctor
-              name="Poe Sang min"
-              desc="Podiatrist"
-              avatar={DummyDoctor3}
-              onPress={() => navigation.navigate('DoctorProfile')}
-            />
+            {topRatedDoctor.map((item) => {
+              console.log('ini hasil mapping', item);
+              return (
+                <RatedDoctor
+                  key={item.id}
+                  name={item.data.fullName}
+                  desc={item.data.profession}
+                  avatar={item.data.photo}
+                  onPress={() => navigation.navigate('DoctorProfile', item)}
+                />
+              );
+            })}
             <Text style={styles.sectionLabel}>Good News</Text>
           </View>
-          {news.map((item) => {
-            return (
-              <NewsItem
-                title={item.title}
-                image={item.image}
-                date={item.date}
-                key={item.id}
-              />
-            );
-          })}
+          {news.length > 0
+            ? news.map((item) => {
+                return (
+                  <NewsItem
+                    title={item.title}
+                    image={item.image}
+                    date={item.date}
+                    key={item.id}
+                  />
+                );
+              })
+            : null}
           <Gap height={30} />
         </ScrollView>
       </View>
