@@ -1,11 +1,10 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import {ILlogo} from '../../assets/illustration';
-import {Button, Gap, Input, Link, Loading} from '../../components';
+import {Button, Gap, Input, Link} from '../../components';
 import {Firebase} from '../../config';
-import {colors, fonts, storeData, useForm} from '../../utils';
-import {showMessage} from 'react-native-flash-message';
-import {useDispatch, useSelector} from 'react-redux';
+import {colors, fonts, showError, storeData, useForm} from '../../utils';
+import {useDispatch} from 'react-redux';
 
 const SignIn = ({navigation}) => {
   const [form, SetFrom] = useForm({email: '', password: ''});
@@ -28,14 +27,8 @@ const SignIn = ({navigation}) => {
           });
       })
       .catch((err) => {
-        const errorMessage = err.message;
         dispatch({type: 'SET_LOADING', value: false});
-        showMessage({
-          message: errorMessage,
-          type: 'default',
-          color: colors.white,
-          backgroundColor: colors.error,
-        });
+        showError(err.message);
       });
   };
   return (

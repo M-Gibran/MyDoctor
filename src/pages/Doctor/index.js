@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {
@@ -8,15 +8,65 @@ import {
   NewsItem,
   RatedDoctor,
 } from '../../components';
-import {colors, fonts, getData} from '../../utils';
-import {
-  DummyDoctor1,
-  DummyDoctor2,
-  DummyDoctor3,
-  JSONDoctorCategory,
-} from '../../assets';
+import {colors, fonts, getData, showError} from '../../utils';
+import {DummyDoctor1, DummyDoctor2, DummyDoctor3} from '../../assets';
+import {Firebase} from '../../config';
 
 const Doctor = ({navigation}) => {
+  const [categoryDoctor, SetCategoryDoctor] = useState([]);
+  const [news, SetNews] = useState([]);
+  const [topRatedDoctor, SetTopRatedDoctor] = useState([]);
+
+  useEffect(() => {
+    getCategoryDoctor();
+    getTopRatedDoctors();
+    getNews();
+  });
+
+  const getTopRatedDoctors = () => {
+    Firebase.database()
+      .ref('doctors/')
+      .orderByChild('rate')
+      .limitToLast(3)
+      .once('value')
+      .then((res) => {
+        if (res.val()) {
+          SetNews(res.val());
+        }
+      })
+      .catch((err) => {
+        showError(err.message);
+      });
+  };
+
+  const getCategoryDoctor = () => {
+    Firebase.database()
+      .ref('category_doctor/')
+      .once('value')
+      .then((res) => {
+        if (res.val()) {
+          SetCategoryDoctor(res.val());
+        }
+      })
+      .catch((err) => {
+        showError(err.message);
+      });
+  };
+
+  const getNews = () => {
+    Firebase.database()
+      .ref('news/')
+      .once('value')
+      .then((res) => {
+        if (res.val()) {
+          SetNews(res.val());
+        }
+      })
+      .catch((err) => {
+        showError(err.message);
+      });
+  };
+
   return (
     <View style={styles.page}>
       <View style={styles.content}>
@@ -32,7 +82,7 @@ const Doctor = ({navigation}) => {
             <ScrollView horizontal showsHorizontalScrollIndicator={false}>
               <View style={styles.category}>
                 <Gap width={32} />
-                {JSONDoctorCategory.data.map((item) => {
+                {categoryDoctor.map((item) => {
                   return (
                     <DoctorCategory
                       category={item.category}
@@ -67,9 +117,16 @@ const Doctor = ({navigation}) => {
             />
             <Text style={styles.sectionLabel}>Good News</Text>
           </View>
-          <NewsItem />
-          <NewsItem />
-          <NewsItem />
+          {news.map((item) => {
+            return (
+              <NewsItem
+                title={item.title}
+                image={item.image}
+                date={item.date}
+                key={item.id}
+              />
+            );
+          })}
           <Gap height={30} />
         </ScrollView>
       </View>
