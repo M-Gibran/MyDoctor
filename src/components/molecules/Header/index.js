@@ -31,6 +31,7 @@ const styles = StyleSheet.create({
     color: type === 'dark' ? colors.white : colors.text.primary,
     textAlign: 'center',
     flex: 1,
+    textTransform: 'capitalize',
   }),
   container: (type) => ({
     paddingVertical: 30,

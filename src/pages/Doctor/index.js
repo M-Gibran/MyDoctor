@@ -9,7 +9,6 @@ import {
   RatedDoctor,
 } from '../../components';
 import {colors, fonts, getData, showError} from '../../utils';
-import {DummyDoctor1, DummyDoctor2, DummyDoctor3} from '../../assets';
 import {Firebase} from '../../config';
 
 const Doctor = ({navigation}) => {
@@ -22,10 +21,6 @@ const Doctor = ({navigation}) => {
     getTopRatedDoctors();
     getNews();
   }, []);
-
-  const parseArray = (listObject) => {
-    return data;
-  };
 
   const getTopRatedDoctors = () => {
     Firebase.database()
@@ -57,7 +52,9 @@ const Doctor = ({navigation}) => {
       .once('value')
       .then((res) => {
         if (res.val()) {
-          SetCategoryDoctor(res.val());
+          const data = res.val();
+          const filteredData = data.filter((el) => el !== null);
+          SetCategoryDoctor(filteredData);
         }
       })
       .catch((err) => {
@@ -71,7 +68,9 @@ const Doctor = ({navigation}) => {
       .once('value')
       .then((res) => {
         if (res.val()) {
-          SetNews(res.val());
+          const data = res.val();
+          const filteredData = data.filter((el) => el !== null);
+          SetNews(filteredData);
         }
       })
       .catch((err) => {
@@ -99,7 +98,7 @@ const Doctor = ({navigation}) => {
                     <DoctorCategory
                       category={item.category}
                       key={item.id}
-                      onPress={() => navigation.navigate('ChooseDoctor')}
+                      onPress={() => navigation.navigate('ChooseDoctor', item)}
                     />
                   );
                 })}
@@ -110,7 +109,6 @@ const Doctor = ({navigation}) => {
           <View style={styles.wrapperSection}>
             <Text style={styles.sectionLabel}>Top Rated Doctor</Text>
             {topRatedDoctor.map((item) => {
-              console.log('ini hasil mapping', item);
               return (
                 <RatedDoctor
                   key={item.id}
