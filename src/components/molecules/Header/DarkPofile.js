@@ -1,18 +1,17 @@
 import React from 'react';
 import {Image, StyleSheet, Text, View} from 'react-native';
-import {DummyDoctor10} from '../../../assets';
 import {colors, fonts} from '../../../utils';
 import {Button} from '../../atoms';
 
-const DarkPofile = ({onPress}) => {
+const DarkPofile = ({onPress, fullName, profession, photo}) => {
   return (
     <View style={styles.container}>
       <Button type="icon-only" icon="back-light" onPress={onPress} />
       <View style={styles.content}>
-        <Text style={styles.name}>Nairobi Putri Hayza</Text>
-        <Text style={styles.desc}>Doktor Anak</Text>
+        <Text style={styles.name}>{fullName}</Text>
+        <Text style={styles.desc}>{profession}</Text>
       </View>
-      <Image source={DummyDoctor10} style={styles.avatar} />
+      <Image source={photo} style={styles.avatar} />
     </View>
   );
 };

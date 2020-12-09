@@ -1,24 +1,32 @@
-import {NavigationContainer} from '@react-navigation/native';
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import {ChatItem, Header, InputChat} from '../../components';
 import {colors, fonts} from '../../utils';
 
-const Chatting = ({navigation}) => {
+const Chatting = ({navigation, route}) => {
+  const {photo, fullName, profession} = route.params.data;
   return (
     <View style={styles.page}>
-      <View style={styles.content}>
-        <Header
-          title="Nairobi Putri Hayza"
-          type="dark-profile"
-          onPress={() => navigation.goBack()}
-        />
-        <Text style={styles.chatDate}>Senin, 21 Maret, 2020</Text>
-        <ChatItem isMe />
-        <ChatItem />
-        <ChatItem isMe />
-      </View>
-      <InputChat />
+      <Header
+        type="dark-profile"
+        fullName={fullName}
+        photo={{uri: photo}}
+        profession={profession}
+        onPress={() => navigation.goBack()}
+      />
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.content}>
+          <Text style={styles.chatDate}>Senin, 21 Maret, 2020</Text>
+          <ChatItem isMe />
+          <ChatItem />
+          <ChatItem isMe />
+        </View>
+      </ScrollView>
+      <InputChat
+        value={'haloo'}
+        onChangeText={(value) => alert(value)}
+        onButtonPress={() => alert('test')}
+      />
     </View>
   );
 };

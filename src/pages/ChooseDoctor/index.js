@@ -1,12 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {
-  DummyDoctor10,
-  DummyDoctor11,
-  DummyDoctor7,
-  DummyDoctor8,
-  DummyDoctor9,
-} from '../../assets';
+import {StyleSheet, View} from 'react-native';
 import {Header, List} from '../../components';
 import {Firebase} from '../../config';
 import {colors} from '../../utils';

@@ -12,6 +12,8 @@ const DoctorProfile = ({navigation, route}) => {
     hospital_address,
     str_number,
   } = route.params.data;
+  const doctor = route.params;
+
   return (
     <View style={styles.page}>
       <Header title="Doctor Profile" onPress={() => navigation.goBack()} />
@@ -24,7 +26,7 @@ const DoctorProfile = ({navigation, route}) => {
         <View style={styles.action}>
           <Button
             title="Start Consultation"
-            onPress={() => navigation.navigate('Message')}
+            onPress={() => navigation.navigate('Chatting', doctor)}
           />
         </View>
       </ScrollView>
