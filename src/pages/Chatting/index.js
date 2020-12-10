@@ -1,10 +1,46 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {showMessage} from 'react-native-flash-message';
 import {ChatItem, Header, InputChat} from '../../components';
-import {colors, fonts} from '../../utils';
+import {Firebase} from '../../config';
+import {colors, fonts, getData, showError} from '../../utils';
 
 const Chatting = ({navigation, route}) => {
-  const {photo, fullName, profession} = route.params.data;
+  const {photo, fullName, profession, uid} = route.params.data;
+  const [chatContent, SetChatContent] = useState('');
+  const [user, SetUser] = useState();
+
+  useEffect(() => {
+    getData('user').then((res) => {
+      SetUser(res);
+    });
+  }, []);
+
+  const ChatSend = () => {
+    const today = new Date();
+    const hours = today.getHours();
+    const minutes = today.getMinutes();
+    const years = today.getFullYear();
+    const months = today.getMonth() + 1;
+    const dates = today.getDate();
+
+    const data = {
+      sendBy: user.uid,
+      chatDate: new Date(),
+      chatTime: `${hours}.${minutes} ${hours > 12 ? 'PM' : 'AM'}`,
+      chatContent: chatContent,
+    };
+
+    SetChatContent('');
+    Firebase.database()
+      .ref(`chatting/${user.uid}_${uid}/allChat/${years}-${months}-${dates}`)
+      .push(data)
+      .then(SetChatContent(''))
+      .catch((err) => {
+        showError(err.message);
+      });
+  };
+
   return (
     <View style={styles.page}>
       <Header
@@ -23,9 +59,9 @@ const Chatting = ({navigation, route}) => {
         </View>
       </ScrollView>
       <InputChat
-        value={'haloo'}
-        onChangeText={(value) => alert(value)}
-        onButtonPress={() => alert('test')}
+        value={chatContent}
+        onChangeText={(value) => SetChatContent(value)}
+        onButtonPress={() => ChatSend()}
       />
     </View>
   );
