@@ -3,37 +3,73 @@ import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import {showMessage} from 'react-native-flash-message';
 import {ChatItem, Header, InputChat} from '../../components';
 import {Firebase} from '../../config';
-import {colors, fonts, getData, showError} from '../../utils';
+import {
+  colors,
+  fonts,
+  getChatTime,
+  getData,
+  getChatYear,
+  showError,
+} from '../../utils';
 
 const Chatting = ({navigation, route}) => {
-  const {photo, fullName, profession, uid} = route.params.data;
+  const dataDoctor = route.params;
+  const [user, SetUser] = useState({});
   const [chatContent, SetChatContent] = useState('');
-  const [user, SetUser] = useState();
+  const [chatData, SetChatData] = useState([]);
 
   useEffect(() => {
+    getDataUserFromLocal();
+    const chatID = `${user.uid}_${dataDoctor.data.uid}`;
+    const urlChatting = `chatting/${chatID}/allChat`;
+    Firebase.database()
+      .ref(urlChatting)
+      .on('value', (snapshot) => {
+        if (snapshot.val()) {
+          const dataSnapshot = snapshot.val();
+          const allDataChat = [];
+          Object.keys(dataSnapshot).map((key) => {
+            const dataChat = dataSnapshot[key];
+            const newDataChat = [];
+
+            Object.keys(dataChat).map((itemChat) => {
+              newDataChat.push({
+                id: itemChat,
+                data: dataChat[itemChat],
+              });
+            });
+
+            allDataChat.push({
+              id: key,
+              data: newDataChat,
+            });
+          });
+          SetChatData(allDataChat);
+        }
+      });
+  }, [dataDoctor.data.uid, user.uid]);
+
+  const getDataUserFromLocal = () => {
     getData('user').then((res) => {
       SetUser(res);
     });
-  }, []);
+  };
 
   const ChatSend = () => {
     const today = new Date();
-    const hours = today.getHours();
-    const minutes = today.getMinutes();
-    const years = today.getFullYear();
-    const months = today.getMonth() + 1;
-    const dates = today.getDate();
+    const chatID = `${user.uid}_${dataDoctor.data.uid}`;
+    const urlChatting = `chatting/${chatID}/allChat/${getChatYear(today)}`;
 
     const data = {
       sendBy: user.uid,
-      chatDate: new Date(),
-      chatTime: `${hours}.${minutes} ${hours > 12 ? 'PM' : 'AM'}`,
+      chatDate: today.getTime(),
+      chatTime: getChatTime(today),
       chatContent: chatContent,
     };
 
     SetChatContent('');
     Firebase.database()
-      .ref(`chatting/${user.uid}_${uid}/allChat/${years}-${months}-${dates}`)
+      .ref(urlChatting)
       .push(data)
       .then(SetChatContent(''))
       .catch((err) => {
@@ -45,19 +81,35 @@ const Chatting = ({navigation, route}) => {
     <View style={styles.page}>
       <Header
         type="dark-profile"
-        fullName={fullName}
-        photo={{uri: photo}}
-        profession={profession}
+        fullName={dataDoctor.data.fullName}
+        photo={{uri: dataDoctor.data.photo}}
+        profession={dataDoctor.data.profession}
         onPress={() => navigation.goBack()}
       />
-      <ScrollView showsVerticalScrollIndicator={false}>
-        <View style={styles.content}>
-          <Text style={styles.chatDate}>Senin, 21 Maret, 2020</Text>
-          <ChatItem isMe />
-          <ChatItem />
-          <ChatItem isMe />
-        </View>
-      </ScrollView>
+      <View style={styles.content}>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {chatData.map((chat) => {
+            return (
+              <View key={chat.id}>
+                <Text style={styles.chatDate}>{chat.id}</Text>
+                {chat.data.map((itemChat) => {
+                  const isMe = itemChat.data.sendBy === user.uid;
+                  console.log('ini adalh', dataDoctor.data.photo);
+                  return (
+                    <ChatItem
+                      key={itemChat.id}
+                      isMe={isMe}
+                      text={itemChat.data.chatContent}
+                      date={itemChat.data.chatTime}
+                      photo={isMe ? null : {uri: dataDoctor.data.photo}}
+                    />
+                  );
+                })}
+              </View>
+            );
+          })}
+        </ScrollView>
+      </View>
       <InputChat
         value={chatContent}
         onChangeText={(value) => SetChatContent(value)}
