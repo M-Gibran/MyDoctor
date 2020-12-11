@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
-import {showMessage} from 'react-native-flash-message';
 import {ChatItem, Header, InputChat} from '../../components';
 import {Firebase} from '../../config';
 import {
@@ -59,6 +58,8 @@ const Chatting = ({navigation, route}) => {
     const today = new Date();
     const chatID = `${user.uid}_${dataDoctor.data.uid}`;
     const urlChatting = `chatting/${chatID}/allChat/${getChatYear(today)}`;
+    const urlMessageUser = `messages/${user.uid}/${chatID}`;
+    const urlMessageDoctor = `messages/${dataDoctor.data.uid}/${chatID}`;
 
     const data = {
       sendBy: user.uid,
@@ -67,11 +68,30 @@ const Chatting = ({navigation, route}) => {
       chatContent: chatContent,
     };
 
+    const datahistoryChatForUser = {
+      lastContentChat: chatContent,
+      lastChatDate: today.getTime(),
+      uidPartner: dataDoctor.data.uid,
+    };
+
+    const datahistoryChatForDoctor = {
+      lastContentChat: chatContent,
+      lastChatDate: today.getTime(),
+      uidPartner: user.uid,
+    };
+
     SetChatContent('');
     Firebase.database()
       .ref(urlChatting)
       .push(data)
-      .then(SetChatContent(''))
+      .then(() => {
+        SetChatContent('');
+        // history message for user
+        Firebase.database().ref(urlMessageUser).set(datahistoryChatForUser);
+
+        // history message for doctor
+        Firebase.database().ref(urlMessageDoctor).set(datahistoryChatForDoctor);
+      })
       .catch((err) => {
         showError(err.message);
       });
@@ -94,7 +114,6 @@ const Chatting = ({navigation, route}) => {
                 <Text style={styles.chatDate}>{chat.id}</Text>
                 {chat.data.map((itemChat) => {
                   const isMe = itemChat.data.sendBy === user.uid;
-                  console.log('ini adalh', dataDoctor.data.photo);
                   return (
                     <ChatItem
                       key={itemChat.id}
