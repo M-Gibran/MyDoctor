@@ -1,10 +1,9 @@
 import React, {useEffect, useState} from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
-import {showMessage} from 'react-native-flash-message';
 import {ILNullPhoto} from '../../assets';
 import {Button, Gap, Header, Input, Profile} from '../../components';
 import {Firebase} from '../../config';
-import {colors, getData, storeData} from '../../utils';
+import {colors, getData, showError, storeData} from '../../utils';
 import ImagePicker from 'react-native-image-picker';
 
 const UpdateProfile = ({navigation}) => {
@@ -34,12 +33,8 @@ const UpdateProfile = ({navigation}) => {
   const update = () => {
     if (password.length > 0) {
       if (password.length < 6) {
-        showMessage({
-          message: 'Password anda kurang dari 6 karakter',
-          color: colors.white,
-          backgroundColor: colors.error,
-          type: 'default',
-        });
+        const errmessage = 'Password anda kurang dari 6 karakter';
+        showError(errmessage);
       } else {
         updatePassword();
         updateProfileData();
@@ -54,12 +49,7 @@ const UpdateProfile = ({navigation}) => {
     Firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         user.updatePassword(password).catch((err) => {
-          showMessage({
-            message: err.message,
-            color: colors.white,
-            backgroundColor: colors.error,
-            type: 'default',
-          });
+          showError(err.message);
         });
       }
     });
@@ -72,16 +62,10 @@ const UpdateProfile = ({navigation}) => {
       .ref(`users/${profile.uid}/`)
       .update(data)
       .then(() => {
-        console.log('SUKSES:', data);
         storeData('user', data);
       })
       .catch((err) => {
-        showMessage({
-          message: err,
-          color: colors.white,
-          backgroundColor: colors.error,
-          type: 'default',
-        });
+        showError(err.message);
       });
   };
 
@@ -96,14 +80,9 @@ const UpdateProfile = ({navigation}) => {
     ImagePicker.launchImageLibrary(
       {quality: 0.5, maxWidth: 200, maxHeight: 200},
       (response) => {
-        console.log('response', response);
         if (response.didCancel || response.error) {
-          showMessage({
-            message: 'oops, sepertinya anda tidak memilih foto nya?',
-            type: 'default',
-            backgroundColor: colors.error,
-            color: colors.white,
-          });
+          const errmessage = 'oops, sepertinya anda tidak memilih foto nya?';
+          showError(errmessage);
         } else {
           const source = {uri: response.uri};
 

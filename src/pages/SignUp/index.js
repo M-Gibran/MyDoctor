@@ -4,6 +4,7 @@ import {Button, Gap, Header, Input, Loading} from '../../components';
 import {colors, storeData, useForm} from '../../utils';
 import {Firebase} from '../../config';
 import {showMessage} from 'react-native-flash-message';
+import {useDispatch} from 'react-redux';
 
 const SignUp = ({navigation}) => {
   const [form, setFrom] = useForm({
@@ -13,14 +14,14 @@ const SignUp = ({navigation}) => {
     password: '',
   });
 
-  const [loading, SetLoading] = useState(false);
+  const dispatch = useDispatch();
 
   const onContinue = () => {
-    SetLoading(true);
+    dispatch({type: 'SET_LOADING', value: true});
     Firebase.auth()
       .createUserWithEmailAndPassword(form.email, form.password)
       .then((success) => {
-        SetLoading(false);
+        dispatch({type: 'SET_LOADING', value: false});
         setFrom('reset');
         const data = {
           fullName: form.fullName,
@@ -35,11 +36,10 @@ const SignUp = ({navigation}) => {
 
         storeData('user', data);
         navigation.navigate('UploadPhoto', data);
-        console.log('register success', success);
       })
       .catch((error) => {
         const errorMessage = error.message;
-        SetLoading(false);
+        dispatch({type: 'SET_LOADING', value: false});
         showMessage({
           message: errorMessage,
           type: 'default',
@@ -83,7 +83,6 @@ const SignUp = ({navigation}) => {
           </View>
         </ScrollView>
       </View>
-      {loading && <Loading />}
     </>
   );
 };

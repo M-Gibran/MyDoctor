@@ -8,7 +8,7 @@ import {
   NewsItem,
   RatedDoctor,
 } from '../../components';
-import {colors, fonts, getData, showError} from '../../utils';
+import {colors, fonts, showError} from '../../utils';
 import {Firebase} from '../../config';
 
 const Doctor = ({navigation}) => {

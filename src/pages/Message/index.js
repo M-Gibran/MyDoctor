@@ -44,8 +44,6 @@ const Message = ({navigation}) => {
     });
   };
 
-  console.log('ini last chat', lastChat);
-
   return (
     <View style={styles.page}>
       <View style={styles.content}>

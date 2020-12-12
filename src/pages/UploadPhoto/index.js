@@ -2,9 +2,8 @@ import React, {useState} from 'react';
 import {Image, StyleSheet, Text, View, TouchableOpacity} from 'react-native';
 import {Button, Gap, Header, Link} from '../../components';
 import {ILNullPhoto, IconAddPhoto, IconRemovePhoto} from '../../assets';
-import {colors, fonts, storeData} from '../../utils';
+import {colors, fonts, showError, storeData} from '../../utils';
 import ImagePicker from 'react-native-image-picker';
-import {showMessage} from 'react-native-flash-message';
 import {Firebase} from '../../config';
 
 const UploadPhoto = ({navigation, route}) => {
@@ -18,14 +17,9 @@ const UploadPhoto = ({navigation, route}) => {
     ImagePicker.launchImageLibrary(
       {quality: 0.5, maxWidth: 200, maxHeight: 200},
       (response) => {
-        console.log('response', response);
         if (response.didCancel || response.error) {
-          showMessage({
-            message: 'oops, sepertinya anda tidak memilih foto nya?',
-            type: 'default',
-            backgroundColor: colors.error,
-            color: colors.white,
-          });
+          const errmessage = 'oops, sepertinya anda tidak memilih foto nya?';
+          showError(errmessage);
         } else {
           const source = {uri: response.uri};
 

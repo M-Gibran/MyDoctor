@@ -1,6 +1,6 @@
 import React from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {DummyUser, IconRemovePhoto} from '../../../assets';
+import {IconRemovePhoto} from '../../../assets';
 import {colors, fonts} from '../../../utils';
 
 const Profile = ({name, desc, isRemove, photo, onPress}) => {
