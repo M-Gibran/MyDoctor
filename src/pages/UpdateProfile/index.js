@@ -42,6 +42,7 @@ const UpdateProfile = ({navigation}) => {
       }
     } else {
       updateProfileData();
+      navigation.replace('MainApp');
     }
   };
 
