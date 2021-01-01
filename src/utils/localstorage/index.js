@@ -4,7 +4,7 @@ export const storeData = async (key, value) => {
   try {
     await AsyncStorage.setItem(key, JSON.stringify(value));
   } catch (e) {
-    // saving error
+    alert('gagal menyimpan data');
   }
 };
 
@@ -14,5 +14,7 @@ export const getData = async (key) => {
     if (value !== null) {
       return JSON.parse(value);
     }
-  } catch (e) {}
+  } catch (e) {
+    alert('gagal mengambil data');
+  }
 };
